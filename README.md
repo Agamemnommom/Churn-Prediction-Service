@@ -1,101 +1,22 @@
-# Churn Prediction Service | End-to-End MLOps Project
+# Churn Prediction Service
+Небольшое ML‑исследование и сервис для прогнозирования оттока клиентов на датасете с Kaggle. Проведён EDA, анализ связей/корреляций, обучение и сравнение моделей классификации по метрикам качества с последующим выбором и дообучением лучшей модели.
 
-Проект представляет собой полноценный ML-сервис для предсказания оттока клиентов. Он охватывает весь жизненный цикл модели: от анализа данных до развертывания в виде API с последующим мониторингом.
 
-## Описание проекта
+Датасет
+Источник: Kaggle — <https://www.kaggle.com/datasets/muhammadshahidazeem/customer-churn-dataset/slug>
 
-Цель проекта — создать и развернуть модель машинного обучения, которая прогнозирует, уйдет ли клиент в отток. Сервис построен с применением современных MLOps-практик для обеспечения надежности, воспроизводимости и качества.
 
-## Технологический стек
+Подготовка: обработка пропусков, масштабирование числовых, кодирование категориальных (One‑Hot/Target), борьба с дисбалансом (class_weight/oversampling).
 
-- **Моделирование:** Scikit-learn, Pandas
-- **API:** FastAPI
-- **Развертывание:** Docker, Uvicorn
-- **Эксперименты и версионирование моделей:** MLflow
-- **Валидация данных:** Great Expectations
-- **Мониторинг моделей:** Evidently AI
-- **Тестирование:** Pytest
-- **CI/CD:** GitHub Actions
+Методика и модели
+Бейзлайн: логистическая регрессия.
 
-## Архитектура
+Модели: RandomForest, XGBoost/LightGBM, CatBoost.
 
-*Кратко опишите или добавьте простую схему, как компоненты связаны между собой.*
+Валидация: Stratified K‑Fold (k=<вставить>), фиксированные сиды.
 
-1.  **Обучение (Training):** Данные проходят валидацию в **Great Expectations**, после чего модель обучается. Эксперименты, параметры и метрики логируются в **MLflow**. Лучшая модель регистрируется в **MLflow Model Registry**.
-2.  **Сервинг (Serving):** **FastAPI**-приложение загружает модель из реестра и предоставляет эндпоинт `/predict` для получения прогнозов. Все упаковано в **Docker-контейнер**.
-3.  **Мониторинг (Monitoring):** Скрипт с **Evidently AI** периодически анализирует дрейф данных и деградацию модели, генерируя HTML-отчеты.
 
-## Как запустить проект
+Метрики: ROC‑AUC (основная), F1, PR‑AUC, Recall для положительного класса.
 
-1.  **Клонируйте репозиторий:**
-    ```
-    git clone https://github.com/your_username/churn-prediction-service.git
-    cd churn-prediction-service
-    ```
-
-2.  **Установите зависимости:**
-    ```
-    pip install -r requirements.txt
-    ```
-
-3.  **(Рекомендуемый способ) Запуск через Docker Compose:**
-    Эта команда поднимет FastAPI-сервис и сервер MLflow.
-    ```
-    docker-compose up --build
-    ```
-    - API будет доступен по адресу `http://localhost:8000/docs`.
-    - MLflow UI будет доступен по адресу `http://localhost:5000`.
-
-## Как использовать API
-
-Отправьте POST-запрос на `http://localhost:8000/predict` с данными клиента в формате JSON.
-
-**Пример с помощью `curl`:**
-```
-curl -X 'POST' \
-  'http://localhost:8000/predict' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "gender": "Female",
-    "senior_citizen": 0,
-    "partner": "Yes",
-    "dependents": "No",
-    "tenure": 12,
-    "phone_service": "No"
-  }'
-```
-
-**Ожидаемый ответ:**
-```
-{
-  "churn_probability": 0.85
-}
-```
-
-## Структура репозитория
-
-```
-.
-├── .github/workflows/      # CI/CD пайплайны GitHub Actions
-├── data/                   # Датасеты
-├── great_expectations/     # Конфигурации Great Expectations
-├── monitoring_reports/     # HTML-отчеты от Evidently AI
-├── notebooks/              # Jupyter-ноутбуки для EDA
-├── src/                    # Исходный код
-│   ├── api.py              # Логика FastAPI
-│   ├── train.py            # Скрипт обучения модели
-│   ├── predict.py          # Скрипт для инференса
-│   └── monitoring.py       # Скрипт для мониторинга
-├── tests/                  # Юнит-тесты
-├── Dockerfile              # Dockerfile для API
-├── docker-compose.yml      # Конфигурация Docker Compose
-└── README.md               # Этот файл
-```
-
-## MLOps-функциональность
-
-- **MLflow:** Все запуски экспериментов отслеживаются. Лучшие модели версионируются в Model Registry.
-- **Great Expectations:** Встроенная проверка качества данных перед обучением и предсказанием.
-- **Evidently AI:** Регулярный мониторинг дрейфа данных и производительности модели. Примеры отчетов находятся в папке `monitoring_reports`.
-```
+Архитектура и стек
+Язык/библиотеки: Python 3.11, pandas, numpy, scikit‑learn, CatBoost/LightGBM.
