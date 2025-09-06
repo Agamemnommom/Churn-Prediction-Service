@@ -13,10 +13,10 @@
 
 Модели: RandomForest, XGBoost/LightGBM, CatBoost.
 
-Валидация: Stratified K‑Fold (k=<вставить>), фиксированные сиды.
+Валидация: Stratified K‑Fold (k=5), фиксированные сиды.
 
 
 Метрики: ROC‑AUC (основная), F1, PR‑AUC, Recall для положительного класса.
 
 Архитектура и стек
-Язык/библиотеки: Python 3.11, pandas, numpy, scikit‑learn, CatBoost/LightGBM.
+Язык/библиотеки: Python 3.11, pandas, numpy, scikit‑learn, CatBoost.
